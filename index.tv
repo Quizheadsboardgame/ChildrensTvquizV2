@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #0CC0DF; /* Background color */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40%;
+            max-width: 800px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow */
+            padding: 20px;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 5px solid #0CC0DF; /* Outer blue border color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .qa-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .question {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .answer {
+            font-size: 1.2em;
+            color: #555;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="quizImage" src="https://i.imgur.com/3kHYmTn.png" alt="Quiz Image">
+        <div class="qa-box">
+            <div id="question" class="question">Click the image to get a question!</div>
+            <div id="answer" class="answer"></div>
+        </div>
+    </div>
+    
+    <script>
+        const questionsAndAnswers = [
+            { question: "Which show features the character Bluey?", answer: "Bluey" },
+            { question: "What is the name of the talking red dog in Clifford the Big Red Dog?", answer: "Clifford" },
+            { question: "In which show do the characters fight aliens from another dimension?", answer: "Ben 10" },
+            { question: "What is the main setting of the show Peppa Pig?", answer: "A family home and surrounding areas" },
+            { question: "Who are the main characters in Paw Patrol?", answer: "A group of rescue dogs led by Ryder" },
+            { question: "In the show Sesame Street, what is the name of the large yellow bird?", answer: "Big Bird" },
+            { question: "Which show features a magical backpack and a talking monkey named Boots?", answer: "Dora the Explorer" },
+            { question: "What is the name of the blue, computer-animated dog in the show Blue's Clues?", answer: "Blue" },
+            { question: "Which show is set in the magical land of Ooo?", answer: "Adventure Time" },
+            { question: "In the show LazyTown, what is the name of the superhero who fights against Robbie Rotten?", answer: "Sportacus" },
+            { question: "Who is the main character of the show The Amazing World of Gumball?", answer: "Gumball Watterson" },
+            { question: "In which show do the characters live in a pineapple under the sea?", answer: "SpongeBob SquarePants" },
+            { question: "What is the name of the girl who solves mysteries with her talking dog in Scooby-Doo?", answer: "Daphne Blake" },
+            { question: "Which show features a group of animated characters that live in a house made of candy?", answer: "Candy Land" },
+            { question: "In the show My Little Pony, what is the name of the main purple unicorn who learns about friendship?", answer: "Twilight Sparkle" },
+            { question: "What is the name of the big green monster in the show Monster High?", answer: "Frankie Stein" },
+            { question: "Which show features a young boy who travels through a world of strange creatures and magical adventures?", answer: "Adventure Time" },
+            { question: "In which show does a group of kids run a lemonade stand in their neighborhood?", answer: "Lemonade Mouth" },
+            { question: "What is the name of the talking car in the show Speed Racer?", answer: "Mach 5" },
+            { question: "Who is the hero in the show Miraculous Ladybug?", answer: "Marinette Dupain-Cheng" },
+            { question: "In which show does a young girl named Molly use her magical powers to help her friends?", answer: "Molly of Denali" },
+            { question: "What is the name of the blue hedgehog who runs at super speeds in Sonic the Hedgehog?", answer: "Sonic" },
+            { question: "Which show features a group of friends who run a superhero team from their secret headquarters?", answer: "Teen Titans Go!" },
+            { question: "What is the name of the main character who loves to eat spaghetti in the show Garfield?", answer: "Garfield" },
+            { question: "In which show do the characters live in a world where they can change their shape and size?", answer: "The Magic School Bus" },
+            { question: "What is the name of the friendly ghost who lives in the show Casper the Friendly Ghost?", answer: "Casper" },
+            { question: "Which show features a group of kids who can turn into animals by saying a magic word?", answer: "Animorphs" },
+            { question: "In which show does a robot named Wall-E explore an abandoned Earth?", answer: "WALL-E" },
+            { question: "What is the name of the magical creature in the show My Neighbor Totoro?", answer: "Totoro" },
+            { question: "Who is the character that lives in a treehouse and goes on adventures in the show The Magic Treehouse?", answer: "Jack and Annie" },
+            { question: "In which show does a superhero duo fight evil while wearing capes and masks?", answer: "Power Rangers" },
+            { question: "What is the name of the famous bear who lives in the Hundred Acre Wood?", answer: "Winnie the Pooh" },
+            { question: "Which show features a group of robots who protect their home planet from villains?", answer: "Transformers" },
+            { question: "In the show The Backyardigans, what do the characters use to go on adventures?", answer: "Their imagination" },
+            { question: "What is the name of the animated character who goes on adventures in the show Elinor Wonders Why?", answer: "Elinor" },
+            { question: "Which show follows the adventures of a young witch named Kiki?", answer: "Kiki's Delivery Service" },
+            { question: "In the show Super Why!, what do the characters use to solve problems?", answer: "Their reading skills" },
+            { question: "What is the name of the baby who loves to sing and dance in the show Baby Shark's Big Show?", answer: "Baby Shark" },
+            { question: "Which show features a character named Max who is a superhero in training?", answer: "Max & Ruby" },
+            { question: "In the show Nella the Princess Knight, what is the main character's special ability?", answer: "Her bravery and kindness" },
+            { question: "What is the name of the orange cat who loves to eat lasagna in the show Garfield?", answer: "Garfield" },
+            { question: "In which show does a young boy explore space and time with his friends?", answer: "Cosmic Kids" },
+            { question: "What is the name of the fish who becomes a superhero in the show Fishtronaut?", answer: "Fishtronaut" },
+            { question: "Which show features a group of kids who are trained to be superheroes by a magical mentor?", answer: "My Hero Academia" },
+            { question: "In the show The Octonauts, what is the main goal of the characters?", answer: "To explore the ocean and help sea creatures" },
+            { question: "What is the name of the dinosaur who travels through time and adventures in the show Dinosaur Train?", answer: "Buddy" },
+            { question: "In which show do characters solve mysteries with the help of a magical book?", answer: "The Book of Pooh" },
+            { question: "What is the name of the character who travels through a magical world to find her way home in the show Dorothy and the Wizard of Oz?", answer: "Dorothy" },
+            { question: "Which show features a group of animated characters who live in a house and go on adventures?", answer: "The Loud House" },
+            { question: "In the show Toot & Puddle, what do the characters love to do?", answer: "Travel and explore the world" },
+            { question: "What is the name of the hero who flies and saves the day in the show Super Wings?", answer: "Jett" },
+            { question: "In which show does a young girl have magical powers and go on adventures in a magical land?", answer: "Mia and Me" },
+            { question: "What is the name of the character who learns valuable life lessons in the show The Doozers?", answer: "The Doozers" },
+            { question: "Which show follows the adventures of a group of farm animals who work together to solve problems?", answer: "Farmtastic" },
+            { question: "In the show Bubble Guppies, what are the main characters?", answer: "A group of preschoolers who live underwater" },
+            { question: "What is the name of the little red engine who always helps others in the show Thomas the Tank Engine?", answer: "Thomas" },
+            { question: "Which show features a group of friends who go on treasure hunts and solve mysteries?", answer: "The Treasure Hunters" },
+            { question: "In the show Puffin Rock, who is the main character?", answer: "Puffin" },
+            { question: "What is the name of the superhero who can control the elements in the show Avatar: The Last Airbender?", answer: "Aang" },
+            { question: "In which show do characters explore outer space and meet aliens?", answer: "Star Wars Rebels" },
+            { question: "What is the name of the friendly monster who helps kids in the show Sesame Street?", answer: "Elmo" },
+            { question: "Which show features a magical princess who can control the elements in her kingdom?", answer: "Princess Sofia the First" },
+            { question: "In the show Ninjago, who are the main characters?", answer: "A group of young ninjas" },
+            { question: "What is the name of the adventurous cat who explores a magical world in the show Magic Cat Academy?", answer: "Magic Cat" },
+            { question: "Which show features a group of kids who have superpowers and fight against villains?", answer: "Powerpuff Girls" },
+            { question: "In the show The Lion Guard, who is the leader of the Lion Guard?", answer: "Kion" },
+            { question: "What is the name of the little girl who lives with her grandmother in the show The Little Bear?", answer: "Little Bear" },
+            { question: "Which show features a group of young adventurers who explore different lands and solve mysteries?", answer: "The Explorers Club" },
+            { question: "In the show Wild Kratts, what do the Kratt Brothers use to explore the animal kingdom?", answer: "Creature Powers" },
+            { question: "What is the name of the character who can turn invisible in the show The Incredibles?", answer: "Violet Parr" },
+            { question: "Which show features a group of friends who live in a magical forest and go on adventures?", answer: "The Magic Forest" },
+            { question: "In the show Henry Danger, what is the superhero's name?", answer: "Captain Man" },
+            { question: "What is the name of the superhero team in the show The Super Hero Squad Show?", answer: "Super Hero Squad" },
+            { question: "Which show follows the adventures of a group of kids who discover magical creatures?", answer: "The Magical Adventures" },
+            { question: "In the show Llama Llama, what is the name of the main character?", answer: "Llama Llama" },
+            { question: "What is the name of the animated show about a young witch learning to fly?", answer: "Little Witch Academia" },
+            { question: "Which show features a group of talking animals who solve problems in their neighborhood?", answer: "Zootopia" },
+            { question: "In the show Little Einsteins, what do the characters use to explore the world?", answer: "Their rocket ship" },
+            { question: "What is the name of the friendly dragon who loves to sing in the show Puff the Magic Dragon?", answer: "Puff" },
+            { question: "Which show follows a young superhero's adventures in a magical world?", answer: "The Super Kids" },
+            { question: "In the show Big Hero 6, who is the main robot character?", answer: "Baymax" },
+            { question: "What is the name of the fun-loving character who travels the world in the show Dora the Explorer?", answer: "Dora" },
+            { question: "Which show features a group of kids who live in a treehouse and go on exciting adventures?", answer: "Treehouse Adventures" },
+            { question: "In the show Go Jetters, what do the characters use to travel around the world?", answer: "A time-traveling vehicle" },
+            { question: "What is the name of the friendly alien who helps kids in the show My Friend Mr. Jinks?", answer: "Mr. Jinks" },
+            { question: "Which show features a young boy who can talk to animals and solve problems?", answer: "Animal Talk" },
+            { question: "In the show The Loud House, what is the name of the main character's large family?", answer: "The Louds" },
+            { question: "What is the name of the animated show about a young boy's adventures in a magical land?", answer: "Magic Adventures" },
+            { question: "Which show features a magical land where animals and humans live together?", answer: "Animal Kingdom" },
+            { question: "In the show Wallykazam!, what is the name of the little ogre who loves to read?", answer: "Wally" },
+            { question: "What is the name of the brave girl who explores the world in the show Brave?", answer: "Merida" },
+            { question: "Which show features a group of kids who have magical powers and fight against evil?", answer: "Magic Squad" },
+            { question: "In the show Max & Ruby, what do the characters enjoy doing together?", answer: "Playing and exploring" },
+            { question: "What is the name of the animated show where the characters live in a world of candy and sweets?", answer: "Candyland Adventures" },
+            { question: "Which show features a magical girl who can turn into different animals?", answer: "Magical Animals" },
+            { question: "In the show My Little Pony, what is the main character's magical ability?", answer: "Controlling the magic of friendship" },
+            { question: "What is the name of the animated series about a group of friends who love to play sports?", answer: "Sports Buddies" },
+            { question: "Which show features a group of kids who help animals in need?", answer: "Animal Heroes" },
+            { question: "In the show Go Diego Go!, what is the main character's job?", answer: "To rescue animals" },
+            { question: "What is the name of the young adventurer who explores magical lands in the show Magic Land?", answer: "Alex" },
+            { question: "Which show features a group of kids who solve mysteries with their talking dog?", answer: "Mystery Squad" },
+            { question: "In the show Doc McStuffins, what is the main character's job?", answer: "To fix and care for toys" }
+        ];
+
+        document.getElementById('quizImage').addEventListener('click', function() {
+            const randomIndex = Math.floor(Math.random() * questionsAndAnswers.length);
+            const question = questionsAndAnswers[randomIndex].question;
+            const answer = questionsAndAnswers[randomIndex].answer;
+
+            document.getElementById('question').textContent = question;
+            document.getElementById('answer').textContent = answer;
+        });
+    </script>
+</body>
+</html>
